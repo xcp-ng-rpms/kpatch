@@ -1,11 +1,16 @@
 Name: kpatch
 Summary: kernel patch manager
-Version: 0.4.0
+Version: 0.6.2
 Release: 1
 
 License: GPLv2
 URL: https://github.com/dynup/kpatch
-Source0: https://code.citrite.net/rest/archive/latest/projects/XSU/repos/%{name}/archive?at=2ef755bbb96c77ce439a2d8825feadaabc9fe3c9&format=tar.gz&prefix=%{name}-%{version}#/%{name}-%{version}.tar.gz
+
+Source0: https://code.citrite.net/rest/archive/latest/projects/XSU/repos/kpatch/archive?at=1696f5db7b5&format=tar.gz&prefix=kpatch-0.6.2#/kpatch-0.6.2.tar.gz
+
+
+Provides: gitsha(https://code.citrite.net/rest/archive/latest/projects/XSU/repos/kpatch/archive?at=1696f5db7b5&format=tar.gz&prefix=kpatch-0.6.2#/kpatch-0.6.2.tar.gz) = 1696f5db7b55f53aad6866a266d62650c63b9222
+
 
 Requires: kmod binutils
 Requires: kernel-uname-r = %{kernel_version}
@@ -21,8 +26,10 @@ dynamically patch the kernel without rebooting.
 
 
 %package devel
+Provides: gitsha(https://code.citrite.net/rest/archive/latest/projects/XSU/repos/kpatch/archive?at=1696f5db7b5&format=tar.gz&prefix=kpatch-0.6.2#/kpatch-0.6.2.tar.gz) = 1696f5db7b55f53aad6866a266d62650c63b9222
 Summary: %{name} build tool
 Requires: %{name}%{?_isa} = %{version}-%{release}
+Requires: bc elfutils-libelf-devel
 
 %description devel
 The build tool to build live patches for kpatch. The build tool uses the
@@ -34,19 +41,16 @@ kernel source and a patch to create a live patch.
 
 
 %build
-%{__make} PREFIX=/usr KPATCH_BUILD=/lib/modules/%{kernel_version}/build
+%{__make} PREFIX=/usr KPATCH_BUILD=/lib/modules/%{kernel_version}/build BUILDMOD=no
 
 
 %install
-%{__make} install PREFIX=/usr KPATCH_BUILD=/lib/modules/%{kernel_version}/build DESTDIR=%{buildroot}
-
-# mark modules executable so that strip-to-file can strip them
-find %{buildroot} -name "*.ko" -type f | xargs chmod u+x
+%{__make} install PREFIX=/usr KPATCH_BUILD=/lib/modules/%{kernel_version}/build DESTDIR=%{buildroot} BUILDMOD=no
+rm %{buildroot}/%{_sysconfdir}/init/kpatch.conf
 
 
 %files
 %{_sbindir}/kpatch
-%{_usr}/lib/%{name}
 %{_usr}/lib/systemd/system/kpatch.service
 %doc %{_mandir}/man1/kpatch.1.gz
 
@@ -59,5 +63,11 @@ find %{buildroot} -name "*.ko" -type f | xargs chmod u+x
 
 
 %changelog
+* Tue Nov 27 2018 Nathanael Davison <nathanael.davison@citrix.com> - 0.6.2-2
+- Removing kernel module part of kpatch.
+
+* Mon Oct 29 2018 Ross Lagerwall <ross.lagerwall@citrix.com> - 0.6.2-1
+- Update to v0.6.2.
+
 * Wed Aug 23 2017 Ross Lagerwall <ross.lagerwall@citrix.com> - 0.4.0-1
 - Update to the latest commit which is 0.4.0 plus a few bug fixes
