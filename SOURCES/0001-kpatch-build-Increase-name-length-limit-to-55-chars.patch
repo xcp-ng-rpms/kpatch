@@ -1,0 +1,39 @@
+From f7b27f2fec6da2a9990d0c1ce8650b8d212e9899 Mon Sep 17 00:00:00 2001
+From: Ross Lagerwall <ross.lagerwall@citrix.com>
+Date: Tue, 5 Apr 2022 10:25:12 +0100
+Subject: [PATCH] kpatch-build: Increase name length limit to 55 chars
+
+Previously, the name length was limited to 48 chars. This was then
+prepended with "kpatch-" and a trailing NUL terminator to get to the 56
+char limit for kernel module names. After some code rearrangement, the
+48 char restriction was applied to the name after being prefixed with
+kpatch-/livepatch-, limiting the length more than necessary. Increase
+the name length limit back to 55 chars to restore the original limit.
+
+Fixes: c0105ea46774 ("kpatch-build: set default module prefix accordingly")
+Signed-off-by: Ross Lagerwall <ross.lagerwall@citrix.com>
+---
+ kpatch-build/kpatch-build | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/kpatch-build/kpatch-build b/kpatch-build/kpatch-build
+index d0397d4..960a741 100755
+--- a/kpatch-build/kpatch-build
++++ b/kpatch-build/kpatch-build
+@@ -506,10 +506,10 @@ find_kobj() {
+ }
+ 
+ # Only allow alphanumerics and '_' and '-' in the module name.  Everything else
+-# is replaced with '-'.  Also truncate to 48 chars so the full name fits in the
+-# kernel's 56-byte module name array.
++# is replaced with '-'.  Also truncate to 55 chars so the full name + NUL
++# terminator fits in the kernel's 56-byte module name array.
+ module_name_string() {
+-	echo "${1//[^a-zA-Z0-9_-]/-}" | cut -c 1-48
++	echo "${1//[^a-zA-Z0-9_-]/-}" | cut -c 1-55
+ }
+ 
+ usage() {
+-- 
+2.31.1
+
