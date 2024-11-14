@@ -14,7 +14,7 @@
 Name: kpatch
 Summary: kernel patch manager
 Version: 0.6.2
-Release: %{?xsrel}%{?dist}
+Release: %{?xsrel}.0.1%{?dist}
 
 License: GPLv2
 URL: https://github.com/dynup/kpatch
@@ -48,7 +48,7 @@ kernel source and a patch to create a live patch.
 %prep
 %autosetup -p1
 %{?_cov_prepare}
-
+test %{kernel_version} != "dummy"
 
 %build
 %{?_cov_wrap} %{__make} PREFIX=/usr KPATCH_BUILD=/lib/modules/%{kernel_version}/build BUILDMOD=no
@@ -76,6 +76,9 @@ rm %{buildroot}/%{_sysconfdir}/init/kpatch.conf
 
 
 %changelog
+* Thu Nov 14 2024 Yann Dirson <yann.dirson@vates.tech> - 0.6.2-5.0.1
+- Bomb out early if kernel_version macro is missing
+
 * Fri Apr 29 2022 Ross Lagerwall <ross.lagerwall@citrix.com> - 0.6.2-5
 - Backport a patch from upstream to increase the allowable name length
 
