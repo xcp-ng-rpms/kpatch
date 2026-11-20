@@ -14,7 +14,7 @@
 Name: kpatch
 Summary: kernel patch manager
 Version: 0.6.2
-Release: %{?xsrel}%{?dist}
+Release: %{?xsrel}.0.kernelpreview.1%{?dist}
 
 License: GPLv2
 URL: https://github.com/dynup/kpatch
@@ -76,6 +76,9 @@ rm %{buildroot}/%{_sysconfdir}/init/kpatch.conf
 
 
 %changelog
+* Tue Nov 17 2026 Quentin Casasnovas <quentin.casasnovas@vates.tech> - 0.6.2-5.0.kernelpreview.1
+- Rebuild for kernel v4.19.325-cip137
+
 * Fri Apr 29 2022 Ross Lagerwall <ross.lagerwall@citrix.com> - 0.6.2-5
 - Backport a patch from upstream to increase the allowable name length
 
