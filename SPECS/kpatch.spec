@@ -14,7 +14,7 @@
 Name: kpatch
 Summary: kernel patch manager
 Version: 0.6.2
-Release: %{?xsrel}.0.kernelpreview.1%{?dist}
+Release: %{?xsrel}.0.kernelpreview.1.0.testv0.1%{?dist}
 
 License: GPLv2
 URL: https://github.com/dynup/kpatch
